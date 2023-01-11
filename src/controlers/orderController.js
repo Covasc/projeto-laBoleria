@@ -1,4 +1,5 @@
-import { allOrders, orderById, orderRegister } from "../repositories/orderRepository.js";
+import { allOrders, orderById, orderRegister, ordersByDate } from "../repositories/orderRepository.js";
+
 
 export async function addNewOrder (request, response) {
     const orderInfo = request.body;
@@ -14,8 +15,10 @@ export async function addNewOrder (request, response) {
 }
 
 export async function getAllOrders(request, response) {
+    const date = request.query.date;
+
     try {
-        const { rows: ordersData } = await allOrders();
+        const { rows: ordersData } = date ? await ordersByDate(date) : await allOrders();
         const orders = ordersData.map(
             (order) => (
                 {client:{id: order.clientId,

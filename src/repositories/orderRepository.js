@@ -45,4 +45,18 @@ async function orderByClient (id) {
     )
 }
 
-export {orderRegister, allOrders, orderById, orderByClient};
+async function ordersByDate (date) {
+    return db.query(
+        `SELECT orders.id as "orderId", orders."createdAt", orders.quantity, orders."totalPrice",
+        orders."clientId", clients.name as "clientName", clients.address as "clientAdress", 
+        clients.phone as "clientPhone", orders."cakeId", cakes.name as "cakeName", cakes.price as "cakePrice",
+        cakes.description as "cakeDescription", cakes.image as "cakeImage"
+        FROM orders
+        JOIN clients ON orders."clientId" = clients.id
+        JOIN cakes ON orders."cakeId" = cakes.id
+        WHERE orders."createdAt"::date = $1`,
+        [date]
+    )
+}
+
+export {orderRegister, allOrders, orderById, orderByClient, ordersByDate};
