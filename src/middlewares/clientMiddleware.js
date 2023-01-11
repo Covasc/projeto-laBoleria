@@ -21,9 +21,10 @@ export async function isPhoneAvaliable(request, response, next) {
 
 export async function isValidClientId(request, response, next) {
     const clientInfo = request.body;
+    const clientId = request.params.id
 
     try {
-        const { rows: clientData } = await clientById(clientInfo.clientId);
+        const { rows: clientData } = await clientById(clientId? clientId : clientInfo.clientId);
         const [client] = clientData;
 
         if (!client) {
